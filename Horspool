@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <string.h>
+
+#define SIZE 128  // Assuming ASCII character set, you can adjust this if necessary
+
+int Table[SIZE];  // Global declaration of the shift table
+
+void shifttable(char P[25]) {
+    int i, m;
+    m = strlen(P);
+
+    for (i = 0; i < SIZE; i++) {
+        Table[i] = m;
+    }
+
+    for (i = 0; i <= m - 2; i++) {
+        Table[P[i]] = m - i - 1;
+    }
+}
+
+int horspool(char T[100], char P[25]) {
+    int m, n, i, k;
+    m = strlen(P);
+    n = strlen(T);
+    i = m - 1;
+
+    while (i <= n - 1) {
+        k = 0;
+        while ((k < m) && (P[m - 1 - k] == T[i - k])) {
+            k = k + 1;
+        }
+        if (k == m) {
+            return i - m + 1;
+        } else {
+            i = i + Table[T[i]];
+        }
+    }
+    return -1;
+}
+
+int main() {
+    char text[100], pattern[25];
+    int res;
+
+    printf("Enter the text:\n");
+    scanf("%[^\n]s", text);
+
+    printf("Enter the pattern:\n");
+    scanf("%s", pattern);
+
+    shifttable(pattern);  // Build the shift table
+
+    res = horspool(text, pattern);
+
+    if (res == -1) {
+        printf("Pattern not found\n");
+    } else {
+        printf("Pattern found at position %d\n", res);
+    }
+
+    return 0;
+}
